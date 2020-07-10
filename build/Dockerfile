@@ -15,10 +15,10 @@ RUN go mod download
 COPY . .
 
 # Build the Go app
-RUN GOOS=linux go install github.com/stankovic98/ecclesia
+RUN go build -o main
 
 EXPOSE 5000
 
-RUN ecclesia
+CMD ["./main"]
 
 

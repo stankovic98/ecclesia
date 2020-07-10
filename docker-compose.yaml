@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  db:
+    build:
+      context: ./build/db
+    environment:
+      POSTGRES_PASSWORD: lozinka123
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - fullstack
+  
+  ecclesia:
+    build:
+      context: .
+      dockerfile: ./build/Dockerfile
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    networks:
+      - fullstack
+
+  
+networks:
+  fullstack:
+    driver: bridge

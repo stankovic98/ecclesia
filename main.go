@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/lib/pq"
 )
@@ -16,6 +17,7 @@ type server struct {
 
 func main() {
 	fmt.Println("Hello world")
+	time.Sleep(5 * time.Second) // Wait for docker to initalize
 	s := server{}
 	s.db = initDB()
 	http.HandleFunc("/ping", s.ping)
@@ -51,7 +53,7 @@ func (s *server) getAllParishes(w http.ResponseWriter, r *http.Request) {
 }
 
 const (
-	host     = "172.17.0.2"
+	host     = "db"
 	port     = 5432
 	user     = "postgres"
 	password = "lozinka123"
@@ -61,11 +63,12 @@ func initDB() *sql.DB {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s sslmode=disable", host, port, user, password)
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		log.Println(err)
 	}
 	err = db.Ping()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return nil
 	}
 	log.Println("successfull connection")
 	return db
