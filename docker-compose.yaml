@@ -23,7 +23,16 @@ services:
     networks:
       - fullstack
 
-  
+  test:
+    build:
+      context: ./test
+      dockerfile: ../build/Dockerfile.test
+    depends_on:
+      - ecclesia
+    networks:
+      - fullstack
+
+    
 networks:
   fullstack:
     driver: bridge

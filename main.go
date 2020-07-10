@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	time.Sleep(5 * time.Second) // Wait for docker to initalize
+	time.Sleep(1 * time.Second) // Wait for docker to initalize
 	s := server.Server{}
 	s.Repo = repo.New()
 	http.ListenAndServe(":5000", s.GetRoutes())
