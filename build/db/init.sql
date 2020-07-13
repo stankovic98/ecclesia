@@ -23,10 +23,10 @@ create table parishes (
 
 insert into parishes (uid, name, priest, diocese_id) values 
     ('zupa-strigova', 'Župa Štrigova', 'vlč. Kristijan Kuhar', 'varazdinska-biskupija'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05crma', 'Župa Sveti Juraj na Bregu', 'vlč Nikola Samodol', 'varazdinska-biskupija'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05crmb', 'Župa Nedelišće', 'Zvonimir Radoš', 'varazdinska-biskupija'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05crmc', 'Župa Pribislavec', 'Mladen Delić', 'varazdinska-biskupija'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05crmd', 'Župa Blažene Djevice Marije Pomoćnice', 'Tihomir Ladić', 'zagrebacka-biskupija');
+    ('sveti-juraj-na-bregu', 'Župa Sveti Juraj na Bregu', 'vlč Nikola Samodol', 'varazdinska-biskupija'),
+    ('zupa-nedelisce', 'Župa Nedelišće', 'Zvonimir Radoš', 'varazdinska-biskupija'),
+    ('zupa-pribislavec', 'Župa Pribislavec', 'Mladen Delić', 'varazdinska-biskupija'),
+    ('marija-pomocnica', 'Župa Blažene Djevice Marije Pomoćnice', 'Tihomir Ladić', 'zagrebacka-biskupija');
 
 create table admins (
     uid char(30) UNIQUE NOT NULL PRIMARY KEY,
