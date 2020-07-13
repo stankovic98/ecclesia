@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net"
@@ -27,10 +28,30 @@ func init() {
 	log.Fatalf("Unable to connect to the API.")
 }
 
+type test struct {
+	Name     string `json:"name"`
+	Endpoint string `json:"endpoint"`
+	Want     string `json:"want"`
+}
+
 func main() {
+	testFile, err := ioutil.ReadFile("tests.json")
+	if err != nil {
+		log.Fatalf("can't read file: %v\n", err)
+	}
+	var tests []test
+	err = json.Unmarshal(testFile, &tests)
+	if err != nil {
+		log.Printf("can't unmarshal: %v\n", err)
+		return
+	}
 	start := time.Now()
-	testPing()
-	testGetAllParishes()
+	for i := 0; i < len(tests); i++ {
+		data := testingTemplate(tests[i].Endpoint)
+		if data != tests[i].Want {
+			log.Printf("Test %s failed: want %s, got %s\n", tests[i].Name, tests[i].Want, data)
+		}
+	}
 	log.Printf("tests complited in %s\n", time.Now().Sub(start))
 }
 
@@ -44,7 +65,7 @@ func testPing() {
 }
 
 func testGetAllParishes() {
-	want := `[{"UID":"zupa-strigova","Name":"Župa Štrigova","Priest":"vlč. Kristijan Kuhar","DioceseID":"varazdinska-biskupija"},{"UID":"PL62ELIbTGUaaNTKIEZuFyns05crma","Name":"Župa Sveti Juraj na Bregu","Priest":"vlč Nikola Samodol","DioceseID":"varazdinska-biskupija"},{"UID":"PL62ELIbTGUaaNTKIEZuFyns05crmb","Name":"Župa Nedelišće","Priest":"Zvonimir Radoš","DioceseID":"varazdinska-biskupija"},{"UID":"PL62ELIbTGUaaNTKIEZuFyns05crmc","Name":"Župa Pribislavec","Priest":"Mladen Delić","DioceseID":"varazdinska-biskupija"},{"UID":"PL62ELIbTGUaaNTKIEZuFyns05crmd","Name":"Župa Blažene Djevice Marije Pomoćnice","Priest":"Tihomir Ladić","DioceseID":"zagrebacka-biskupija"}]`
+	want := ``
 	data := testingTemplate("/all-parishes")
 	if data != want {
 		log.Printf("want %x, got %x\n", want, data)

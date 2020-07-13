@@ -1,0 +1,14 @@
+[
+    {
+        "name": "Ping",
+        "endpoint": "/ping",
+        "method": "GET",
+        "want": "pong"
+    },
+    {
+        "name": "Get All Parishes",
+        "endpoint": "/all-parishes",
+        "method": "GET",
+        "want": "[{\"UID\":\"zupa-strigova\",\"Name\":\"Župa Štrigova\",\"Priest\":\"vlč. Kristijan Kuhar\",\"DioceseID\":\"varazdinska-biskupija\"},{\"UID\":\"PL62ELIbTGUaaNTKIEZuFyns05crma\",\"Name\":\"Župa Sveti Juraj na Bregu\",\"Priest\":\"vlč Nikola Samodol\",\"DioceseID\":\"varazdinska-biskupija\"},{\"UID\":\"PL62ELIbTGUaaNTKIEZuFyns05crmb\",\"Name\":\"Župa Nedelišće\",\"Priest\":\"Zvonimir Radoš\",\"DioceseID\":\"varazdinska-biskupija\"},{\"UID\":\"PL62ELIbTGUaaNTKIEZuFyns05crmc\",\"Name\":\"Župa Pribislavec\",\"Priest\":\"Mladen Delić\",\"DioceseID\":\"varazdinska-biskupija\"},{\"UID\":\"PL62ELIbTGUaaNTKIEZuFyns05crmd\",\"Name\":\"Župa Blažene Djevice Marije Pomoćnice\",\"Priest\":\"Tihomir Ladić\",\"DioceseID\":\"zagrebacka-biskupija\"}]"
+    }
+]
