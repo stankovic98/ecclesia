@@ -33,12 +33,12 @@
         "name": "Parish with wrong parish id",
         "endpoint": "/varazdinska-biskupija/nepostojeca-zupa",
         "method": "GET",
-        "want": "diocese with id nepostojeca-zupa doesn't exist"
+        "want": "parish with id nepostojeca-zupa doesn't exist"
     },
     {
         "name": "Parish with wrong diocese id",
         "endpoint": "/nepostojeca-biskupija/zupa-strigova",
         "method": "GET",
-        "want": "diocese with id zupa-strigova doesn't exist"
+        "want": "parish with id zupa-strigova doesn't exist"
     }
 ]
