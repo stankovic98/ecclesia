@@ -3,30 +3,32 @@ create database church owner useradmin;
 
 CREATE TABLE dioceses (
     uid     varchar(30) PRIMARY KEY,
-    name    varchar(50) not null
+    name    varchar(50) not null,
+    info    text        not null
 );
 
-insert into dioceses (uid, name) values
-    ('varazdinska-biskupija', 'Varaždinska biskupija'),
-    ('sisacka-biskupija', 'Sisačka biskupija'),
-    ('zagrebacka-biskupija', 'Zagrebačka nadbiskupija'),
-    ('bjelovarsko-krizevacka', 'Bjelovarko-križevačka biskupija'),
-    ('dubrovacka-biskupija', 'Dubrovačka biskupija');
+insert into dioceses (uid, name, info) values
+    ('varazdinska-biskupija', 'Varaždinska biskupija', '**some markdown** ### Hello'),
+    ('sisacka-biskupija', 'Sisačka biskupija', '**some markdown** ### Hello'),
+    ('zagrebacka-biskupija', 'Zagrebačka nadbiskupija', '**some markdown** ### Hello'),
+    ('bjelovarsko-krizevacka', 'Bjelovarko-križevačka biskupija', '**some markdown** ### Hello'),
+    ('dubrovacka-biskupija', 'Dubrovačka biskupija', '**some markdown** ### Hello');
 
 create table parishes (
     uid varchar(30) PRIMARY KEY,
     name varchar(50) UNIQUE not null,
     priest varchar(30) not null,
+    info    text    not null,
     diocese_id varchar(30),
     FOREIGN KEY(diocese_id) REFERENCES dioceses(uid)
 );
 
-insert into parishes (uid, name, priest, diocese_id) values 
-    ('zupa-strigova', 'Župa Štrigova', 'vlč. Kristijan Kuhar', 'varazdinska-biskupija'),
-    ('sveti-juraj-na-bregu', 'Župa Sveti Juraj na Bregu', 'vlč Nikola Samodol', 'varazdinska-biskupija'),
-    ('zupa-nedelisce', 'Župa Nedelišće', 'Zvonimir Radoš', 'varazdinska-biskupija'),
-    ('zupa-pribislavec', 'Župa Pribislavec', 'Mladen Delić', 'varazdinska-biskupija'),
-    ('marija-pomocnica', 'Župa Blažene Djevice Marije Pomoćnice', 'Tihomir Ladić', 'zagrebacka-biskupija');
+insert into parishes (uid, name, priest, info, diocese_id) values 
+    ('zupa-strigova', 'Župa Štrigova', 'vlč. Kristijan Kuhar', '**some markdown** ### Hello', 'varazdinska-biskupija'),
+    ('sveti-juraj-na-bregu', 'Župa Sveti Juraj na Bregu', 'vlč Nikola Samodol', '**some markdown** ### Hello', 'varazdinska-biskupija'),
+    ('zupa-nedelisce', 'Župa Nedelišće', 'Zvonimir Radoš', '**some markdown** ### Hello', 'varazdinska-biskupija'),
+    ('zupa-pribislavec', 'Župa Pribislavec', 'Mladen Delić', '**some markdown** ### Hello', 'varazdinska-biskupija'),
+    ('marija-pomocnica', 'Župa Blažene Djevice Marije Pomoćnice', 'Tihomir Ladić', '**some markdown** ### Hello', 'zagrebacka-biskupija');
 
 create table admins (
     uid char(30) UNIQUE NOT NULL PRIMARY KEY,
@@ -44,17 +46,16 @@ insert into admins (uid, email, password, first, last, title) values
     ('PL62ELIbTGUaaNTKIEZuFyns05asda', 'strigovskiDekanat', 'lozinka123', 'Franjo', 'Asiski', 'vlc');
 
 create table articles (
-    uid char(30) UNIQUE NOT NULL PRIMARY KEY,
+    uid serial PRIMARY KEY,
     title varchar(30) not null,
     content text not null,
-    create_at timestamp not null default now(),
+    created_at timestamp not null default now(),
     author char(30) not null,
     FOREIGN KEY (author) REFERENCES admins(email)
 );
 
-insert into articles (uid, title, content, author) values
+insert into articles (title, content, author) values
 (
-    'clk2ELIbTGUaaNTKIEZuFyns05asda', 
     'O Čudima i kako ih izmoliti', 
     'Zašto ne bi molio Gospodina da te ozdravi ako hoće? Ako ozdravljenja nema, onda čovjek traži duhovnu snagu i odgovor da bi nosio i razumio svoj križ, ali nikada unaprijed ne smije reći – to tako mora biti. Tko kaže da tako mora biti? Kod Boga nema fatalizma. Njegova je milost neiscrpna.
 
@@ -68,8 +69,7 @@ Bog se služi raznim znakovima i očitovanjima onkraj ljudskog razuma da bi nas 
     'josko@gmail.com'
 ),
 (
-    'clk2ELIbTGUaaNTKIEZuFyns05asdb', 
-    'Lorem Ipsum', 
+    'Drugi tekst', 
     'Zašto ne bi molio Gospodina da te ozdravi ako hoće? Ako ozdravljenja nema, onda čovjek traži duhovnu snagu i odgovor da bi nosio i razumio svoj križ, ali nikada unaprijed ne smije reći – to tako mora biti. Tko kaže da tako mora biti? Kod Boga nema fatalizma. Njegova je milost neiscrpna.
 
 Nema čovjeka koji u svom životu ne traži ili ne očekuje neko čudo. Priželjkujemo ih podsvjesno više nego svjesno, i kad u njih vjerujemo, opet na neki način na racionalnoj razini sumnjamo. Čuda se rijetko događaju, ali se ipak događaju. Čak su i sportska čuda rijetka. Obično budu neočekivana, iznenadna, kad im se najmanje nadamo. Ponekad čuda vjere i ne prepoznajemo. Previdimo ih, podcijenimo, ako stvari ne gledamo duhovnim očima. Formu i oblik vidimo, ali nam izmakne suština. Govor čuda je najtajanstvenije očitovanje Boga. Zaista, tko ne bi želio vidjeti i doživjeti neko čudo u svom životu? No čuda se ne događaju na način kako bi mi htjeli ili očekivali. Ako bismo ih mogli predvidjeti, onda ne bi bila čuda. Ona su nepredvidljiva. Zato i jesu u domeni božanskoj. Nenajavljena su i dolaze kao mana s neba klonulom narodu u pustinji.
@@ -81,3 +81,17 @@ Nema čovjeka koji u svom životu ne traži ili ne očekuje neko čudo. Priželj
 Bog se služi raznim znakovima i očitovanjima onkraj ljudskog razuma da bi nas podsjetio na čudesnost otajstava naše katoličke vjere. Jedino u tomu može biti smisao i vidljivih pretvorbi vina u Krv ili hostije u Tijelo. No rekao bih da je još najveće čudo preobražaj ljudskoga srca koje se time postiže, buđenje čovjeka iz samrtnog sna – čudo je iznenađenje koje našoj uspavanosti priređuje prodor duhovnog i transcendentnog u naš materijalni svijet. Čudo je znak, čudo je poziv, upozorenje, Božja zagonetka, parabola, prispodoba postavljena na pozornicu naše egzistencije, da nas potakne na razmišljanje, da nas potrese, da nas probudi.',
     'kuhar@gmail.com'
 );
+
+
+create table published_articles (
+    uid     serial primary key,
+    article_uid integer,
+    published_under varchar(30),
+    FOREIGN KEY (article_uid) REFERENCES articles(uid)
+);
+
+insert into published_articles (article_uid, published_under) VALUES 
+    (1, 'zupa-strigova'),
+    (1, 'varazdinska-biskupija'),
+    (2, 'zupa-strigova'),
+    (2, 'marija-pomocnica');
