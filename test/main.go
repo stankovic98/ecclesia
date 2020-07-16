@@ -7,6 +7,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -32,6 +33,8 @@ type test struct {
 	Name     string `json:"name"`
 	Endpoint string `json:"endpoint"`
 	Want     string `json:"want"`
+	Method   string `json:"method"`
+	Body     string `json:"body"`
 }
 
 func main() {
@@ -47,7 +50,7 @@ func main() {
 	}
 	start := time.Now()
 	for i := 0; i < len(tests); i++ {
-		data := testingTemplate(tests[i].Endpoint)
+		data := testingTemplate(&tests[i])
 		if data != tests[i].Want {
 			log.Printf("Test %s failed: want %s, got %s\n", tests[i].Name, tests[i].Want, data)
 		}
@@ -55,35 +58,27 @@ func main() {
 	log.Printf("tests complited in %s\n", time.Now().Sub(start))
 }
 
-func testPing() {
-	data := testingTemplate("/ping")
-	if string(data) != "pong" {
-		log.Printf("want %x, got %x\n", "pong", data)
-		return
-	}
-	log.Println("Ping test succesfull")
-}
-
-func testGetAllParishes() {
-	want := ``
-	data := testingTemplate("/all-parishes")
-	if data != want {
-		log.Printf("want %x, got %x\n", want, data)
-		return
-	}
-	log.Println("testGetAllParishes succesfull")
-}
-
-func testingTemplate(endpoint string) string {
-	resp, err := http.Get(apiURL + endpoint)
-	if err != nil {
-		log.Fatalf("can't ping server: %v\n", err)
-	}
+func testingTemplate(t *test) string {
+	resp := getResponse(t)
 	defer resp.Body.Close()
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("can't read response from %s: %v\n", endpoint, err)
+		log.Fatalf("can't read response from %s: %v\n", t.Endpoint, err)
 	}
 	data = bytes.TrimSpace(data)
 	return string(data)
+}
+
+func getResponse(t *test) *http.Response {
+	var resp *http.Response
+	var err error
+	if t.Method == http.MethodGet {
+		resp, err = http.Get(apiURL + t.Endpoint)
+	} else {
+		resp, err = http.Post(apiURL+t.Endpoint, "application/json", strings.NewReader(t.Body))
+	}
+	if err != nil {
+		log.Fatalf("can't ping server: %v\n", err)
+	}
+	return resp
 }
