@@ -1,4 +1,5 @@
 CREATE USER useradmin with PASSWORD 'lozinka123';
+CREATE EXTENSION pgcrypto;
 create database church owner useradmin;
 
 CREATE TABLE dioceses (
@@ -40,10 +41,10 @@ create table admins (
 );
 
 insert into admins (uid, email, password, first, last, title) values
-    ('PL62ELIbTGUaaNTKIEZuFyns05asdf', 'kuhar@gmail.com', 'lozinka123', 'Kristjan', 'Kuhar', 'dr.sc.'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05asdd', 'josko@gmail.com', 'lozinka123', 'Josko', 'Jozic', 'laik'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05asds', 'varazdinskaB', 'lozinka123', 'Augustin', 'od Hippona', 'biskup'),
-    ('PL62ELIbTGUaaNTKIEZuFyns05asda', 'strigovskiDekanat', 'lozinka123', 'Franjo', 'Asiski', 'vlc');
+    ('PL62ELIbTGUaaNTKIEZuFyns05asdf', 'kuhar@gmail.com', crypt('lozinka123', gen_salt('bf')), 'Kristjan', 'Kuhar', 'dr.sc.'),
+    ('PL62ELIbTGUaaNTKIEZuFyns05asdd', 'josko@gmail.com', crypt('johnspassword', gen_salt('bf')), 'Josko', 'Jozic', 'laik'),
+    ('PL62ELIbTGUaaNTKIEZuFyns05asds', 'varazdinskaB', crypt('johnspassword', gen_salt('bf')), 'Augustin', 'od Hippona', 'biskup'),
+    ('PL62ELIbTGUaaNTKIEZuFyns05asda', 'strigovskiDekanat', crypt('johnspassword', gen_salt('bf')), 'Franjo', 'Asiski', 'vlc');
 
 create table articles (
     uid serial PRIMARY KEY,
@@ -54,7 +55,7 @@ create table articles (
     FOREIGN KEY (author) REFERENCES admins(email)
 );
 
-insert into articles (title, content, author) values
+insert into articles (title, content, created_at, author) values
 (
     'O Čudima i kako ih izmoliti', 
     'Zašto ne bi molio Gospodina da te ozdravi ako hoće? Ako ozdravljenja nema, onda čovjek traži duhovnu snagu i odgovor da bi nosio i razumio svoj križ, ali nikada unaprijed ne smije reći – to tako mora biti. Tko kaže da tako mora biti? Kod Boga nema fatalizma. Njegova je milost neiscrpna.
@@ -66,7 +67,8 @@ Nema čovjeka koji u svom životu ne traži ili ne očekuje neko čudo. Priželj
 
 „Čudo je znak, čudo je poziv, upozorenje, Božja zagonetka, parabola, prispodoba postavljena na pozornicu naše egzistencije, da nas potakne na razmišljanje, da nas potrese, da nas probudi.“
 Bog se služi raznim znakovima i očitovanjima onkraj ljudskog razuma da bi nas podsjetio na čudesnost otajstava naše katoličke vjere. Jedino u tomu može biti smisao i vidljivih pretvorbi vina u Krv ili hostije u Tijelo. No rekao bih da je još najveće čudo preobražaj ljudskoga srca koje se time postiže, buđenje čovjeka iz samrtnog sna – čudo je iznenađenje koje našoj uspavanosti priređuje prodor duhovnog i transcendentnog u naš materijalni svijet. Čudo je znak, čudo je poziv, upozorenje, Božja zagonetka, parabola, prispodoba postavljena na pozornicu naše egzistencije, da nas potakne na razmišljanje, da nas potrese, da nas probudi.',
-    'josko@gmail.com'
+'2020-07-13T11:55:01.381355Z',
+'josko@gmail.com'
 ),
 (
     'Drugi tekst', 
@@ -79,6 +81,7 @@ Nema čovjeka koji u svom životu ne traži ili ne očekuje neko čudo. Priželj
 
 „Čudo je znak, čudo je poziv, upozorenje, Božja zagonetka, parabola, prispodoba postavljena na pozornicu naše egzistencije, da nas potakne na razmišljanje, da nas potrese, da nas probudi.“
 Bog se služi raznim znakovima i očitovanjima onkraj ljudskog razuma da bi nas podsjetio na čudesnost otajstava naše katoličke vjere. Jedino u tomu može biti smisao i vidljivih pretvorbi vina u Krv ili hostije u Tijelo. No rekao bih da je još najveće čudo preobražaj ljudskoga srca koje se time postiže, buđenje čovjeka iz samrtnog sna – čudo je iznenađenje koje našoj uspavanosti priređuje prodor duhovnog i transcendentnog u naš materijalni svijet. Čudo je znak, čudo je poziv, upozorenje, Božja zagonetka, parabola, prispodoba postavljena na pozornicu naše egzistencije, da nas potakne na razmišljanje, da nas potrese, da nas probudi.',
+    '2020-07-13T11:55:01.381355Z',
     'kuhar@gmail.com'
 );
 

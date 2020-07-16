@@ -64,7 +64,7 @@ func (r *Repo) GetParish(dioceseID, parishID string) (model.Parish, error) {
 
 func (r *Repo) getArticles(id string) []model.Aritcle {
 	sqlStatment := `
-		SELECT a.title, a.content, a.create_at, a.author FROM articles AS a INNER JOIN published_articles as pub
+		SELECT a.title, a.content, a.created_at, a.author FROM articles AS a INNER JOIN published_articles as pub
 			ON a.uid = pub.article_uid WHERE pub.published_under=$1; 
 	`
 	var articles []model.Aritcle

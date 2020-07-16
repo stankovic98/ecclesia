@@ -19,7 +19,7 @@ type userClaims struct {
 }
 
 type tokenResponse struct {
-	jwt string `json:"jwt"`
+	Jwt string `json:"jwt"`
 }
 
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
@@ -44,5 +44,6 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwt, err := token.SignedString([]byte("superTajnsLozinka")) // prebaci u env file
+	log.Printf("sve radi: %s\n", jwt)
 	json.NewEncoder(w).Encode(tokenResponse{jwt})
 }
