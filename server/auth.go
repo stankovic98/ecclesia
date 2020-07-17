@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -85,7 +86,8 @@ func middleware(next http.Handler) http.Handler {
 			log.Println("token expired")
 			return
 		}
-
-		next.ServeHTTP(w, r)
+		email := claims.Email
+		ctx := context.WithValue(r.Context(), "email", email)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

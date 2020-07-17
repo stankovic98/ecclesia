@@ -98,3 +98,14 @@ insert into published_articles (article_uid, published_under) VALUES
     (1, 'varazdinska-biskupija'),
     (2, 'zupa-strigova'),
     (2, 'marija-pomocnica');
+
+create table admins_of (
+    uid serial primary key,
+    admin_email char(30),
+    region varchar(30),
+    FOREIGN key (admin_email) REFERENCES admins(email)
+);
+
+insert into admins_of (admin_email, region) VALUES 
+    ('kuhar@gmail.com', 'zupa-strigova'),
+    ('josko@gmail.com', 'varazdinska-biskupija');
