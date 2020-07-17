@@ -16,7 +16,7 @@ type Server struct {
 
 func (s *Server) GetRoutes() *http.ServeMux {
 	routes := http.NewServeMux()
-	routes.HandleFunc("/ping", s.ping)
+	routes.Handle("/ping", middleware(http.HandlerFunc(s.ping)))
 	routes.HandleFunc("/all-parishes", s.getAllParishes)
 	routes.HandleFunc("/login", s.login)
 	routes.HandleFunc("/", s.mainDispatcher)
