@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/stankovic98/ecclesia/model"
 )
 
 type newInfo struct {
@@ -31,4 +33,24 @@ func (s Server) editInfo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write([]byte("success"))
+}
+
+func (s Server) createArticle(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		log.Printf("wrong method %s, use POST\n", r.Method)
+		return
+	}
+	article := model.Aritcle{}
+	err := json.NewDecoder(r.Body).Decode(&article)
+	if err != nil {
+		log.Printf("wrong format: %v\n", err)
+		return
+	}
+	article.Author = r.Context().Value("email").(string)
+	err = s.Repo.PublishArticle(article)
+	if err != nil {
+		log.Printf("can't store article: %v\n", err)
+		http.Error(w, "can't store article", http.StatusBadRequest)
+		return
+	}
 }
