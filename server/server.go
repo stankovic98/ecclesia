@@ -20,6 +20,7 @@ func (s *Server) GetRoutes() *http.ServeMux {
 	routes.Handle("/admin/new-article", middleware(http.HandlerFunc(s.createArticle)))
 	routes.Handle("/ping", middleware(http.HandlerFunc(s.ping)))
 	routes.HandleFunc("/all-parishes", s.getAllParishes)
+	routes.HandleFunc("/all-diocese", s.getAllDioceses)
 	routes.HandleFunc("/login", s.login)
 	routes.HandleFunc("/", s.mainDispatcher)
 	return routes

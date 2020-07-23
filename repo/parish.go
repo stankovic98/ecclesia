@@ -7,9 +7,9 @@ import (
 	"github.com/stankovic98/ecclesia/model"
 )
 
-func (r *Repo) GetAllParishes() []model.Parish {
-	sqlStatement := "SELECT * FROM parishes"
-	rows, err := r.db.Query(sqlStatement)
+func (r *Repo) GetAllParishes(dioceseID string) []model.Parish {
+	sqlStatement := "SELECT * FROM parishes WHERE diocese_id=$1"
+	rows, err := r.db.Query(sqlStatement, dioceseID)
 	if err != nil {
 		log.Println(err)
 	}
@@ -83,4 +83,27 @@ func (r *Repo) getArticles(id string) []model.Aritcle {
 		articles = append(articles, a)
 	}
 	return articles
+}
+
+func (r Repo) GetAllDioceses() []model.Diocese {
+	sqlStatement := "SELECT * FROM dioceses"
+	rows, err := r.db.Query(sqlStatement)
+	if err != nil {
+		log.Println(err)
+	}
+	defer rows.Close()
+	var dioceses []model.Diocese
+	for rows.Next() {
+		var d model.Diocese
+		err := rows.Scan(&d.UID, &d.Name, &d.Info)
+		if err != nil {
+			log.Println(err)
+		}
+		dioceses = append(dioceses, d)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Println(err)
+	}
+	return dioceses
 }
