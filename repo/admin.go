@@ -12,6 +12,7 @@ var sqlStatements = map[string]string{
 	"checkParishes":  "UPDATE parishes SET info = $1 WHERE uid = $2",
 	"storeArticle":   "INSERT INTO articles (title, content, author) VALUES ($1, $2, $3) RETURNING uid;",
 	"publishArticle": "INSERT INTO published_articles (article_uid, published_under) VALUES ($1, $2)",
+	"getInfo":        "SELECT info FROM parishes WHERE uid = $1",
 }
 
 func (r Repo) UpdateInfo(info, email string) error {
@@ -52,4 +53,17 @@ func (r Repo) getRegionByEmail(email string) string {
 		return ""
 	}
 	return region
+}
+
+// GetInfo returns info only for the parishes so it can be
+// displayed on the admin page
+func (r Repo) GetInfo(email string) (string, error) {
+	region := r.getRegionByEmail(email)
+	var info string
+	err := r.db.QueryRow(sqlStatements["getInfo"], region).Scan(&info)
+	if err != nil {
+		log.Printf("can't get info for: %s (info is only avialabe for parishes)", region)
+		return "", err
+	}
+	return info, nil
 }

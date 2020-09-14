@@ -16,13 +16,13 @@ type Server struct {
 
 func (s *Server) GetRoutes() *http.ServeMux {
 	routes := http.NewServeMux()
-	routes.Handle("/admin/edit-info", middleware(http.HandlerFunc(s.editInfo)))
-	routes.Handle("/admin/new-article", middleware(http.HandlerFunc(s.createArticle)))
-	routes.Handle("/ping", middleware(http.HandlerFunc(s.ping)))
-	routes.HandleFunc("/all-parishes", s.getAllParishes)
-	routes.HandleFunc("/all-diocese", s.getAllDioceses)
-	routes.HandleFunc("/login", s.login)
-	routes.HandleFunc("/", s.mainDispatcher)
+	routes.Handle("/api/admin/edit-info", middleware(http.HandlerFunc(s.editInfo)))
+	routes.Handle("/api/admin/new-article", middleware(http.HandlerFunc(s.createArticle)))
+	routes.Handle("/api/ping", middleware(http.HandlerFunc(s.ping)))
+	routes.HandleFunc("/api/all-parishes", s.getAllParishes)
+	routes.HandleFunc("/api/all-diocese", s.getAllDioceses)
+	routes.HandleFunc("/api/login", s.login)
+	routes.HandleFunc("/api/", s.mainDispatcher)
 	return routes
 }
 
@@ -32,8 +32,8 @@ func (s *Server) ping(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) mainDispatcher(w http.ResponseWriter, r *http.Request) {
 	urlPaths := strings.Split(r.URL.Path, "/")
-	dioceseID := urlPaths[1]
-	if len(urlPaths) < 3 {
+	dioceseID := urlPaths[2]
+	if len(urlPaths) < 4 {
 		diocese, err := s.Repo.GetDioceseInfo(dioceseID)
 		if err == sql.ErrNoRows {
 			w.Write([]byte("diocese with id " + dioceseID + "doesn't exist\n"))
@@ -42,7 +42,7 @@ func (s *Server) mainDispatcher(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(diocese)
 		return
 	}
-	parishID := urlPaths[2]
+	parishID := urlPaths[3]
 	parish, err := s.Repo.GetParish(dioceseID, parishID)
 	if err == sql.ErrNoRows {
 		w.Write([]byte("parish with id " + parishID + " doesn't exist\n"))

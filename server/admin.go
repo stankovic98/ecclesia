@@ -13,12 +13,24 @@ type newInfo struct {
 }
 
 func (s Server) editInfo(w http.ResponseWriter, r *http.Request) {
+	adminMail := r.Context().Value("email").(string)
+	log.Printf("admin logged in as: %s\n", adminMail)
+	if r.Method == http.MethodGet {
+		info, err := s.Repo.GetInfo(adminMail)
+		if err != nil {
+			w.Write([]byte("can't get info"))
+			return
+		}
+		err = json.NewEncoder(w).Encode(info)
+		if err != nil {
+			w.Write([]byte("can't encode info"))
+		}
+		return
+	}
 	if r.Method != http.MethodPost {
 		log.Printf("wrong method %s, use POST\n", r.Method)
 		return
 	}
-	adminMail := r.Context().Value("email").(string)
-	log.Printf("admin logged in as: %s\n", adminMail)
 	var info newInfo
 	err := json.NewDecoder(r.Body).Decode(&info)
 	if err != nil {
