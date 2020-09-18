@@ -50,6 +50,7 @@ func (s Server) editInfo(w http.ResponseWriter, r *http.Request) {
 func (s Server) createArticle(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		log.Printf("wrong method %s, use POST\n", r.Method)
+		http.Error(w, http.StatusText(http.StatusMethodNotAllowed), http.StatusMethodNotAllowed)
 		return
 	}
 	article := model.Aritcle{}

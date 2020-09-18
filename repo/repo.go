@@ -4,10 +4,23 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+
+	"github.com/stankovic98/ecclesia/model"
 )
 
 type Repo struct {
 	db *sql.DB
+}
+
+type DatabaseActioner interface {
+	GetParish(dioceseID, parishID string) (model.Parish, error)
+	GetDioceseInfo(id string) (model.Diocese, error)
+	GetAllParishes(dioceseID string) []model.Parish
+	GetAllDioceses() []model.Diocese
+	ValidUser(email, password string) bool
+	UpdateInfo(info, email string) error
+	PublishArticle(article model.Aritcle) error
+	GetInfo(email string) (string, error)
 }
 
 const (

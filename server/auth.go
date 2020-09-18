@@ -11,7 +11,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-type creadentials struct {
+type Creadentials struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
@@ -21,12 +21,12 @@ type userClaims struct {
 	jwt.StandardClaims
 }
 
-type tokenResponse struct {
+type TokenResponse struct {
 	Jwt string `json:"jwt"`
 }
 
 func (s *Server) login(w http.ResponseWriter, r *http.Request) {
-	var cred creadentials
+	var cred Creadentials
 	err := json.NewDecoder(r.Body).Decode(&cred)
 	if err != nil {
 		log.Printf("/login: can't decode body %v\n", err)
@@ -47,7 +47,7 @@ func (s *Server) login(w http.ResponseWriter, r *http.Request) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwt, err := token.SignedString([]byte("superTajnsLozinka")) // prebaci u env file
-	json.NewEncoder(w).Encode(tokenResponse{jwt})
+	json.NewEncoder(w).Encode(TokenResponse{jwt})
 }
 
 func middleware(next http.Handler) http.Handler {
